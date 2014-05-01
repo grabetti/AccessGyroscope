@@ -1,5 +1,6 @@
 package fortyonepost.com.ag;//Created by: DimasTheDriver on Apr/27/2010. Available at: http://www.41post.com/?p=3745
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 
 import android.app.Activity;
@@ -16,6 +17,7 @@ public class AccessGyroscope extends Activity implements SensorEventListener
 	private TextView tv;
 	//the Sensor Manager
 	private SensorManager sManager;
+	TcpClient c;
 	
     /** Called when the activity is first created. */
     @Override
@@ -29,6 +31,12 @@ public class AccessGyroscope extends Activity implements SensorEventListener
         
         //get a hook to the sensor service
         sManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+         try {
+			c = new TcpClient();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     
     //when this Activity starts
@@ -68,8 +76,11 @@ public class AccessGyroscope extends Activity implements SensorEventListener
 		
 		//else it will output the Roll, Pitch and Yawn values
 		DecimalFormat df = new DecimalFormat("00.0"); //Converte o float p/ String mostrando apenas uma casa decimal.
-		tv.setText("Orientation X (Roll) :"+ df.format(event.values[2]) +"\n"+
+		String txtScreen = "Orientation X (Roll) :"+ df.format(event.values[2]) +"\n"+
 				   "Orientation Y (Pitch) :"+ df.format(event.values[1]) +"\n"+
-				   "Orientation Z (Yaw) :"+ df.format(event.values[0]));
+				   "Orientation Z (Yaw) :"+ df.format(event.values[0]);
+		
+		tv.setText(txtScreen);		
+		c.sendMessage(txtScreen);
 	}
 }
